@@ -1,9 +1,27 @@
 <?php
 
 require_once 'config/db.php';
+require_once 'controllers/AgentController.php';
 
-// connexion à la BDD PostgreSQL
-$pgsqlConnection = connectPostgres();
+$conn = connectPostgres();
+$agentController = new AgentController($conn);
 
-// connexion à la BDD CouchDB
-$couchdbConnection = connectCouchDB();
+$action = $_GET['action'] ?? 'listAgents';
+
+switch ($action) {
+    case 'listAgents':
+        $agentController->listAgents();
+        break;
+    case 'createAgent':
+        $agentController->createAgent();
+        break;
+    case 'updateAgent':
+        $agentController->updateAgent($_GET['id']);
+        break;
+    case 'deleteAgent':
+        $agentController->deleteAgent($_GET['id']);
+        break;
+    default:
+        $agentController->listAgents();
+        break;
+}
